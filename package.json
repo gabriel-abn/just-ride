@@ -1,11 +1,20 @@
 {
   "name": "riderize-challenge",
-  "module": "index.ts",
+  "module": "src/server.ts",
   "type": "module",
+  "scripts": {
+    "dev": "bun --watch src/server.ts",
+    "build": "bun build src/server.ts",
+    "start": "NODE_ENV=production bun src/server.ts",
+    "test": "bun test"
+  },
   "devDependencies": {
     "@types/bun": "latest"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "elysia": "^0.8.17"
   }
 }
