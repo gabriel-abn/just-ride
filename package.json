@@ -1,20 +1,28 @@
 {
   "name": "riderize-challenge",
-  "module": "src/server.ts",
+  "module": "./src/server.ts",
   "type": "module",
   "scripts": {
-    "dev": "bun --watch src/server.ts",
+    "dev": "NODE_ENV=development bun --watch src/server.ts",
     "build": "bun build src/server.ts",
     "start": "NODE_ENV=production bun src/server.ts",
-    "test": "bun test"
+    "test": "bun test --watch --env-file=src/main/env/.testing.env"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "@types/supertest": "^6.0.2",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-import-resolver-typescript": "^3.6.1",
+    "eslint-plugin-import": "^2.29.1",
+    "supertest": "^6.3.4"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "elysia": "^0.8.17"
+    "@elysiajs/eden": "^0.8.1",
+    "elysia": "^0.8.17",
+    "zod": "^3.22.4"
   }
 }
