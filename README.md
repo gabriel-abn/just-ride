@@ -1,15 +1,11 @@
-# riderize-challenge
+# Just Ride
 
-To install dependencies:
+This is a project developed for Riderize's challenge.
 
-```bash
-bun install
-```
+## Technologies
 
-To run:
-
-```bash
-bun run index.ts
-```
-
-This project was created using `bun init` in bun v1.0.29. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+- [Bun](https://bun.sh/)
+- [Elysia](https://elysiajs.com/)
+- [ESLint](https://eslint.org/)
+- [Supertest](https://github.com/ladjs/supertest)
+- [GraphQL](https://graphql.org/)
