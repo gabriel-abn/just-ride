@@ -9,7 +9,10 @@
     "test": "bun test --watch --env-file=src/main/env/.testing.env"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
+    "@types/axios": "^0.14.0",
     "@types/bun": "latest",
+    "@types/faker": "^6.6.9",
     "@types/supertest": "^6.0.2",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
@@ -22,6 +25,7 @@
   },
   "dependencies": {
     "@elysiajs/eden": "^0.8.1",
+    "axios": "^1.6.8",
     "elysia": "^0.8.17",
     "zod": "^3.22.4"
   }
