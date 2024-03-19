@@ -1,6 +1,6 @@
+import { ApplicationError } from "@/application/common";
 import type { SafeParseError, ZodSchema } from "zod";
 import type { HttpRequest, HttpResponse } from "./http";
-
 export abstract class Controller<T = any> {
   abstract run(request: HttpRequest<T>): Promise<HttpResponse>;
   private schema: ZodSchema;
@@ -16,7 +16,10 @@ export abstract class Controller<T = any> {
       if (!parsedBody.success) {
         return {
           status: 400,
-          body: formatZodError(parsedBody),
+          body: {
+            error: "INVALID_MISSING_PARAMS",
+            message: formatZodError(parsedBody),
+          },
         };
       }
 
@@ -24,8 +27,18 @@ export abstract class Controller<T = any> {
 
       return response;
     } catch (error: any) {
+      if (error instanceof ApplicationError) {
+        return {
+          status: 400,
+          body: {
+            error: error.name,
+            message: error.message,
+          },
+        };
+      }
+
       return {
-        status: 400,
+        status: 500,
         body: error.message,
       };
     }
