@@ -1,0 +1,15 @@
+version: "3.3"
+
+services:
+  # app:
+  #   ...
+  psql:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: riderize
+    ports:
+      - "5432:5432"
+    # volumes:
+    #   - ./data:/var/lib/postgresql/data
