@@ -22,6 +22,44 @@ describe("Create an account/Sign up", () => {
       validateStatus: () => true,
     });
 
-    expect(response.status).toBe(200);
+    expect(response.data.response).toEqual({ created: true });
+  });
+
+  it("should return status 400 if email is already in use", async () => {
+    await axios({
+      method: "post",
+      url: `http://localhost:${env.PORT}/auth/sign-up`,
+      data: { ...user },
+      validateStatus: () => true,
+    });
+
+    const response = await axios({
+      method: "post",
+      url: `http://localhost:${env.PORT}/auth/sign-up`,
+      data: { ...user },
+      validateStatus: () => true,
+    });
+
+    console.log(response.data);
+
+    expect(response.data.response).toHaveProperty(
+      "error",
+      "EMAIL_ALREADY_IN_USE"
+    );
+    expect(response.status).toEqual(400);
+  });
+
+  it("should return status 400 if password is invalid", async () => {
+    const response = await axios({
+      method: "post",
+      url: `http://localhost:${env.PORT}/auth/sign-up`,
+      data: { ...user, password: "gabriel123" },
+      validateStatus: () => true,
+    });
+
+    expect(response.data.response).toHaveProperty(
+      "error",
+      "INVALID_MISSING_PARAMS"
+    );
   });
 });
