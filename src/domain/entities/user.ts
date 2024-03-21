@@ -17,6 +17,10 @@ export class User extends Entity<UserProps> {
     super(id, props);
   }
 
+  static restore(id: string, props: UserProps): User {
+    return new User(id, props);
+  }
+
   static create(params: {
     username: string;
     email: string;
