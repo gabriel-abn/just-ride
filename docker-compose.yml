@@ -5,6 +5,7 @@ services:
   #   ...
   psql:
     image: postgres:latest
+    container_name: just-ride-psql
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
