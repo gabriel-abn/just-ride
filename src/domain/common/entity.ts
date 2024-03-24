@@ -12,6 +12,6 @@ export abstract class Entity<T> {
   }
 
   get props(): T {
-    return this.props;
+    return this._props;
   }
 }
