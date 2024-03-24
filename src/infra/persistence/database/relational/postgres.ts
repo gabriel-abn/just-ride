@@ -17,7 +17,7 @@ export class Postgres {
 
       Postgres.client.connect();
 
-      console.log(Postgres.client !== undefined);
+      console.log(`Connected: ${Postgres.client !== undefined}`);
     }
 
     return Postgres.client;
