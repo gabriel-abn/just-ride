@@ -1,16 +1,15 @@
-import { ApplicationError } from "@/application/common";
 import type { IUserRepository } from "@/application/protocols/repositories";
 import { User } from "@/domain/entities";
 import { eq } from "drizzle-orm";
-import postgres from "../database/relational/postgres";
+import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { userTable } from "../database/relational/schema";
 
 class UserRepository implements IUserRepository {
-  constructor(private readonly db = postgres) {}
+  constructor(private readonly db: NodePgDatabase) {}
 
   async get(
     filter?: Partial<{ id: string; email: string }> | undefined
-  ): Promise<User> {
+  ): Promise<User | null> {
     let user: User;
 
     try {
@@ -23,14 +22,18 @@ class UserRepository implements IUserRepository {
             .from(userTable)
             .where(eq(userTable.id, id));
 
-          user = User.restore(result.id, {
-            ...result,
-            emailVerified: result.verified,
-            createdAt: new Date(result.created_at),
-            updatedAt: new Date(result.updated_at),
-          });
+          if (result) {
+            user = User.restore(result.id, {
+              ...result,
+              emailVerified: result.verified,
+              createdAt: new Date(result.created_at),
+              updatedAt: new Date(result.updated_at),
+            });
 
-          return user;
+            return user;
+          }
+
+          return null;
         }
 
         if (email) {
@@ -39,49 +42,50 @@ class UserRepository implements IUserRepository {
             .from(userTable)
             .where(eq(userTable.email, email));
 
-          user = User.restore(result.id, {
-            ...result,
-            emailVerified: result.verified,
-            createdAt: new Date(result.created_at),
-            updatedAt: new Date(result.updated_at),
-          });
+          if (result) {
+            user = User.restore(result.id, {
+              ...result,
+              emailVerified: result.verified,
+              createdAt: new Date(result.created_at),
+              updatedAt: new Date(result.updated_at),
+            });
 
-          return user;
+            return user;
+          }
+
+          return null;
         }
-
-        throw new Error("UserRepository.get: Invalid filter.");
       }
 
       throw new Error("UserRepository.get: No filter provided.");
     } catch (error: any) {
-      throw new Error(error);
+      throw new Error(
+        "UserRepository.get: " +
+          `${error.name} - ${error.message} \n ${error.stack}`
+      );
     }
   }
 
   async save(user: User): Promise<void> {
     try {
-      const exists = await this.get({ email: user.props.email });
-
-      if (exists) {
-        throw new ApplicationError(
-          "User already exists.",
-          "EMAIL_ALREADY_IN_USE"
-        );
-      }
+      const props = user.props;
 
       await this.db.insert(userTable).values({
         id: user.id,
-        name: user.props.name,
-        email: user.props.email,
-        username: user.props.username,
-        password: user.props.password,
-        verified: user.props.emailVerified,
-        phone: user.props.phone,
-        created_at: user.props.createdAt.toISOString(),
-        updated_at: user.props.updatedAt.toISOString(),
+        name: props.name,
+        email: props.email,
+        username: props.username,
+        password: props.password,
+        verified: props.emailVerified,
+        phone: props.phone,
+        created_at: props.createdAt.toISOString(),
+        updated_at: props.updatedAt.toISOString(),
       });
     } catch (error: any) {
-      throw new Error(error);
+      throw new Error(
+        "UserRepository.save: " +
+          `${error.name} - ${error.message} \n ${error.stack}`
+      );
     }
   }
 }
