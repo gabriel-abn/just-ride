@@ -1,3 +1,4 @@
+import jwtAdapter from "@/infra/security/jwt-adapter";
 import env from "@/main/env";
 import { faker } from "@faker-js/faker";
 import axios from "axios";
@@ -76,7 +77,7 @@ describe("Login", () => {
     await axios({
       method: "post",
       url: `http://localhost:${env.PORT}/auth/sign-up`,
-      data: { ...user, password: "gabriel123" },
+      data: { ...user },
       validateStatus: () => true,
     });
   });
@@ -86,10 +87,11 @@ describe("Login", () => {
       method: "post",
       url: `http://localhost:${env.PORT}/auth/login`,
       data: { email: faker.internet.email(), password: user.password },
+      validateStatus: () => true,
     });
 
     expect(response.data.response).toHaveProperty("error", "EMAIL_NOT_FOUND");
-    expect(response.status).toEqual(400);
+    expect(response.status).toEqual(401);
   });
 
   it("should receive 400 if password is invalid", async () => {
@@ -101,7 +103,7 @@ describe("Login", () => {
     });
 
     expect(response.data.response).toHaveProperty("error", "INVALID_PASSWORD");
-    expect(response.status).toEqual(400);
+    expect(response.status).toEqual(401);
   });
 
   it("should login with email and password", async () => {
@@ -112,6 +114,12 @@ describe("Login", () => {
       validateStatus: () => true,
     });
 
-    expect(response.data.response).toHaveProperty("token");
+    expect(response.data.response).toHaveProperty("accessToken");
+    expect(response.status).toEqual(200);
+
+    const token = response.data.response.accessToken;
+    const payload = await jwtAdapter.decrypt(token);
+
+    expect(payload).toHaveProperty("id");
   });
 });
