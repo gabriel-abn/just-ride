@@ -1,3 +1,4 @@
+import redis from "@/infra/persistence/database/cache/redis";
 import env from "@/main/env";
 import { faker } from "@faker-js/faker";
 import axios from "axios";
@@ -26,7 +27,11 @@ describe("Create an account/Sign up", () => {
       expect(response.data.response).toEqual({ created: true });
     });
 
-    it("should save confirmation code", async () => {});
+    it("should save confirmation code", async () => {
+      const code = await redis.get(user.email);
+
+      expect(code).toBeDefined();
+    });
 
     it("should send confirmation code to email", async () => {});
   });

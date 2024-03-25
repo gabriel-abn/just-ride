@@ -21,11 +21,6 @@ describe("Verify Email", () => {
     });
   });
 
-  it("should save confirmation code", async () => {
-    // const code = await redis.get(`confirmation:${user.email}`);
-    // expect(code).toBeDefined();
-  });
-
   it("should verify account if given the right code", async () => {
     // const code = await redis.get(`confirmation:${user.email}`);
     // const response = await axios({

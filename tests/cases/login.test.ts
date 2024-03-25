@@ -1,7 +1,7 @@
 import jwtAdapter from "@/infra/security/jwt-adapter";
+import env from "@/main/env";
 import { faker } from "@faker-js/faker";
 import axios from "axios";
-import { env } from "bun";
 import { beforeAll, describe, expect, it } from "bun:test";
 
 describe("Login", () => {
