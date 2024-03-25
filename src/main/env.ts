@@ -10,6 +10,7 @@ const envSchema = z.object({
     .string()
     .default("postgres://postgres:postgres@localhost:5432/postgres"),
   APP_DIR: z.string().default(process.cwd()),
+  REDIS_HOST: z.string().default("localhost"),
 });
 
 export default envSchema.parse(process.env);
